@@ -1,0 +1,7 @@
+# Embryo Histology Study Website
+
+## Asset files
+*.py
+*.bak
+verify_content.py
+check_content.py
