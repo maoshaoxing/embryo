@@ -176,6 +176,21 @@
     /* ── empty ── */
     .empty-tip { text-align:center; padding:40px; color:var(--text-sec); font-size:14px; }
 
+    /* ── 学习表格 ── */
+    .table-wrap { overflow-x:auto; margin:14px 0; }
+    .study-table {
+      width:100%; border-collapse:collapse; font-size:13px;
+      border:1px solid var(--border); border-radius:8px; overflow:hidden;
+    }
+    .study-table thead { background:linear-gradient(135deg,#1a7fa8,#126082); color:#fff; }
+    .study-table th { padding:10px 12px; text-align:left; font-weight:600; white-space:nowrap; }
+    .study-table td { padding:9px 12px; border-bottom:1px solid #eef2f7; vertical-align:top; line-height:1.6; }
+    .study-table tbody tr:hover { background:#f0f8fc; }
+    .study-table tbody tr:last-child td { border-bottom:none; }
+    .study-table td[rowspan] { border-right:2px solid #dce8f0; }
+    .study-table td strong { color:var(--primary-dark); }
+    .section-content h4 { color:var(--primary); margin:16px 0 8px; font-size:15px; border-bottom:1px dashed #dce8f0; padding-bottom:4px; }
+
     @media(max-width:520px) {
       .chapter-grid { grid-template-columns: repeat(2, 1fr); }
       .full-docs-grid { grid-template-columns: 1fr 1fr; }
