@@ -3,77 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>组织学与胚胎学 - 学习资料</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/flexsearch@0.7.43/dist/flexsearch.bundle.min.js"></script>
+  <title>组织学与胚胎学</title>
+  <style>
+    :root {
+      --primary: #1a7fa8;
+      --primary-dark: #126082;
+      --primary-light: #e8f4f9;
+      --accent: #2ecc71;
+      --text: #2d3748;
+      --text-sec: #718096;
+      --bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover: 0 8px 24px rgba(0,0,0,0.14);
+      --radius: 12px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"Microsoft YaHei","微软雅黑",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+    /* ── topbar ── */
+    #topbar {
+      background:linear-gradient(135deg, #1a7fa8, #126082);
+      color:#fff; padding:0 16px;
+      display:flex; align-items:center; gap:12px;
+      height:56px; position:sticky; top:0; z-index:100;
+      box-shadow:0 2px 8px rgba(0,0,0,0.18);
+    }
+    #topbar h1 { font-size:1.15rem; flex:1; white-space:nowrap; }
+    #topbar input {
+      background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3);
+      color:#fff; padding:7px 14px; border-radius:20px; font-size:14px;
+      width:180px; outline:none; transition:.2s;
+    }
+    #topbar input::placeholder { color:rgba(255,255,255,0.65); }
+    #topbar input:focus { background:rgba(255,255,255,0.28); width:220px; }
+    #back-topbar {
+      background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3);
+      color:#fff; padding:6px 14px; border-radius:20px; cursor:pointer;
+      font-size:13px; display:none; white-space:nowrap;
+    }
+    #back-topbar:hover { background:rgba(255,255,255,0.3); }
+
+    /* ── main ── */
+    #main { max-width:960px; margin:0 auto; padding:20px 14px 40px; }
+
+    /* ── 首页 ── */
+    #home-page {}
+    .page-section-title {
+      font-size:1rem; color:var(--text-sec); font-weight:600;
+      margin:24px 0 12px; padding-left:4px;
+      border-left:3px solid var(--primary); padding-left:10px;
+    }
+
+    /* 章节网格 */
+    .chapter-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap:12px;
+    }
+    .chapter-card {
+      background:var(--card-bg); border-radius:var(--radius);
+      padding:16px 12px; box-shadow:var(--shadow);
+      cursor:pointer; transition:.2s; border:1px solid var(--border);
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      text-align:center;
+    }
+    .chapter-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); border-color:#aad4e8; }
+    .chapter-card .ch-num {
+      width:36px; height:36px; border-radius:50%;
+      background:linear-gradient(135deg,#1a7fa8,#126082);
+      color:#fff; font-size:13px; font-weight:bold;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+    .chapter-card .ch-name { font-size:13px; color:var(--text); line-height:1.4; font-weight:500; }
+    .chapter-card .ch-badges { display:flex; flex-wrap:wrap; gap:3px; justify-content:center; margin-top:2px; }
+    .ch-badge {
+      font-size:10px; padding:1px 5px; border-radius:8px;
+      background:var(--primary-light); color:var(--primary);
+    }
+
+    /* 综合文档网格 */
+    .full-docs-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap:12px;
+    }
+    .full-doc-card {
+      background:var(--card-bg); border-radius:var(--radius);
+      padding:16px; box-shadow:var(--shadow); cursor:pointer;
+      transition:.2s; border:1px solid var(--border);
+      display:flex; align-items:center; gap:12px;
+    }
+    .full-doc-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); border-color:#aad4e8; }
+    .full-doc-card .doc-icon { font-size:1.6rem; flex-shrink:0; }
+    .full-doc-card .doc-info .doc-name { font-size:14px; font-weight:600; color:var(--text); }
+    .full-doc-card .doc-info .doc-desc { font-size:12px; color:var(--text-sec); margin-top:2px; }
+
+    /* ── 章节详情页 ── */
+    #chapter-page { display:none; }
+    .chapter-detail-header {
+      background:linear-gradient(135deg,#1a7fa8,#126082);
+      color:#fff; border-radius:var(--radius); padding:20px;
+      margin-bottom:18px;
+    }
+    .chapter-detail-header h2 { font-size:1.3rem; margin-bottom:4px; }
+    .chapter-detail-header p { opacity:.8; font-size:13px; }
+
+    /* 章节内内容标签 */
+    .section-tabs {
+      display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;
+    }
+    .sec-tab {
+      padding:7px 16px; border-radius:20px; border:1px solid var(--border);
+      background:var(--card-bg); color:var(--text-sec); cursor:pointer;
+      font-size:13px; transition:.2s;
+    }
+    .sec-tab:hover { border-color:var(--primary); color:var(--primary); }
+    .sec-tab.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+
+    /* 内容区 */
+    .section-content {
+      background:var(--card-bg); border-radius:var(--radius);
+      padding:20px; box-shadow:var(--shadow); min-height:120px;
+      line-height:1.8; font-size:14px; color:var(--text);
+    }
+    .section-content h4 { color:var(--primary); margin:12px 0 6px; font-size:15px; }
+    .section-content p { margin-bottom:8px; }
+    .section-content .section-title { font-weight:600; color:var(--text); margin:10px 0 4px; }
+    .section-content .definition { margin:6px 0; padding-left:8px; border-left:2px solid #c8dff0; }
+    .section-content .term { font-weight:700; color:var(--primary-dark); margin-right:4px; }
+    .section-content br { display:block; margin:2px 0; content:""; }
+    .no-content { color:var(--text-sec); font-size:14px; padding:20px 0; text-align:center; }
+
+    /* ── 全书文档页 ── */
+    #fulldoc-page { display:none; }
+    .fulldoc-header {
+      background:linear-gradient(135deg,#1a7fa8,#126082);
+      color:#fff; border-radius:var(--radius); padding:20px; margin-bottom:18px;
+    }
+    .fulldoc-header h2 { font-size:1.2rem; }
+    .fulldoc-content {
+      background:var(--card-bg); border-radius:var(--radius);
+      padding:20px; box-shadow:var(--shadow); font-size:14px; line-height:1.85;
+    }
+    .fulldoc-content .section-title { font-weight:600; color:var(--text); margin:10px 0 4px; }
+    .fulldoc-content .definition { margin:5px 0; padding-left:8px; border-left:2px solid #c8dff0; }
+    .fulldoc-content .term { font-weight:700; color:var(--primary-dark); margin-right:4px; }
+
+    /* ── 搜索结果页 ── */
+    #search-page { display:none; }
+    .search-result-item {
+      background:var(--card-bg); border-radius:8px; padding:12px 16px;
+      margin-bottom:10px; box-shadow:var(--shadow); cursor:pointer;
+      border-left:3px solid var(--primary); transition:.2s;
+    }
+    .search-result-item:hover { box-shadow:var(--shadow-hover); }
+    .sri-title { font-size:14px; font-weight:600; color:var(--primary-dark); margin-bottom:4px; }
+    .sri-excerpt { font-size:13px; color:var(--text-sec); line-height:1.5; }
+    mark { background:#fff3a3; color:inherit; border-radius:2px; padding:0 1px; }
+
+    /* ── loading ── */
+    #loading { display:none; text-align:center; padding:40px; color:var(--text-sec); }
+    .spinner {
+      width:32px; height:32px; border:3px solid var(--border);
+      border-top-color:var(--primary); border-radius:50%;
+      animation:spin .8s linear infinite; margin:0 auto 12px;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── empty ── */
+    .empty-tip { text-align:center; padding:40px; color:var(--text-sec); font-size:14px; }
+
+    @media(max-width:520px) {
+      .chapter-grid { grid-template-columns: repeat(2, 1fr); }
+      .full-docs-grid { grid-template-columns: 1fr 1fr; }
+      #topbar h1 { font-size:1rem; }
+      #topbar input { width:120px; }
+    }
+  </style>
 </head>
 <body>
 
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <button id="sidebar-close" aria-label="关闭菜单">&times;</button>
-      <h1>组织学与胚胎学</h1>
-    </div>
-    <div class="sidebar-search">
-      <input type="text" id="sidebar-search" placeholder="搜索内容..." autocomplete="off">
-    </div>
-    <nav id="sidebar-nav"></nav>
-    <div class="sidebar-footer">
-      <button id="dark-toggle" aria-label="切换暗色模式">🌙 暗色模式</button>
-    </div>
-  </aside>
+<div id="topbar">
+  <button id="back-topbar" onclick="goHome()">← 返回首页</button>
+  <h1 id="topbar-title">🔬 组织学与胚胎学</h1>
+  <input type="text" id="search-input" placeholder="搜索知识点..." autocomplete="off">
+</div>
 
-  <header id="topbar">
-    <button id="sidebar-toggle" aria-label="打开菜单">☰</button>
-    <h1>组织学与胚胎学</h1>
-    <div class="topbar-actions">
-      <input type="text" id="topbar-search" placeholder="搜索..." autocomplete="off">
-    </div>
-  </header>
+<div id="main">
+  <div id="loading"><div class="spinner"></div>加载中...</div>
 
-  <main id="content">
-    <div id="loading-overlay">
-      <div class="spinner"></div>
-      <div class="text">加载中...</div>
-    </div>
+  <!-- 首页 -->
+  <div id="home-page">
+    <div class="page-section-title">📚 按章节学习（27章）</div>
+    <div class="chapter-grid" id="chapter-grid"></div>
 
-    <div id="welcome">
-      <h2>欢迎使用<span class="accent">组织学与胚胎学</span>学习资料</h2>
-      <p>请从左侧菜单选择学习内容，或使用搜索功能查找特定知识点。</p>
-      <div class="welcome-grid" id="welcome-grid"></div>
-    </div>
-
-    <div id="tab-content" style="display:none;">
-      <div id="breadcrumb">
-        <a id="breadcrumb-home">首页</a>
-        <span class="sep">›</span>
-        <span class="current" id="breadcrumb-section"></span>
-      </div>
-      <div id="tab-header">
-        <button id="back-btn">← 返回</button>
-        <div style="display:flex;align-items:center;">
-          <h2 id="tab-title"></h2>
-          <button class="self-test-toggle" id="self-test-toggle" title="自测模式：遮住答案看问题">🎓 自测模式</button>
-        </div>
-        <div id="letter-index"></div>
-        <div id="chapter-nav"></div>
-      </div>
-      <div id="chapter-content"></div>
-    </div>
-
-    <div id="search-results" style="display:none;">
-      <button id="search-back-btn">← 返回</button>
-      <h2>搜索结果：<span id="search-query"></span></h2>
-      <div id="search-results-list"></div>
-    </div>
-  </main>
-
-  <div id="sidebar-overlay"></div>
-  <div class="highlight-tooltip" id="highlight-tooltip">
-    <button id="hl-add">🖍️ 标记</button>
-    <button id="hl-remove" class="danger">✕ 取消标记</button>
+    <div class="page-section-title">📖 综合参考资料</div>
+    <div class="full-docs-grid" id="full-docs-grid"></div>
   </div>
 
-  <script src="app.js"></script>
+  <!-- 章节详情页 -->
+  <div id="chapter-page">
+    <div class="chapter-detail-header" id="ch-header">
+      <h2 id="ch-title">章节标题</h2>
+      <p id="ch-subtitle">点击下方标签切换内容</p>
+    </div>
+    <div class="section-tabs" id="section-tabs"></div>
+    <div class="section-content" id="section-content"></div>
+  </div>
+
+  <!-- 全书文档页 -->
+  <div id="fulldoc-page">
+    <div class="fulldoc-header">
+      <h2 id="fulldoc-title">文档标题</h2>
+    </div>
+    <div class="fulldoc-content" id="fulldoc-content"></div>
+  </div>
+
+  <!-- 搜索结果页 -->
+  <div id="search-page">
+    <div class="page-section-title" id="search-title">搜索结果</div>
+    <div id="search-results-list"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
